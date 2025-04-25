@@ -23,7 +23,7 @@ Future<void> _sendResetCode() async {
 
   try {
     final response = await http.post(
-      Uri.parse('https://tracking-api-l4v2.onrender.com/forgot_password'),
+      Uri.parse('http://127.0.0.1:8000/forgot_password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': _emailController.text}),
     );

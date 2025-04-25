@@ -16,7 +16,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
   late Map<String, dynamic> _metadata = {};
   bool _isLoading = true;
   late Timer _updateTimer;
-  final String _apiUrl = 'http://127.0.0.1:8000'; // Cambia a tu IP (10.0.2.2 para emulador Android)
+  final String _apiUrl = 'https://tracking-api-l4v2.onrender.com'; 
 
   @override
   void initState() {

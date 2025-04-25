@@ -23,7 +23,7 @@ class _DatosScreenState extends State<DatosScreen> {
   Future<void> _fetchUsers() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/show'),
+        Uri.parse('https://tracking-api-l4v2.onrender.com/show'),
         headers: {'Accept': 'application/json'},
       );
 

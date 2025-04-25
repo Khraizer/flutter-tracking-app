@@ -43,7 +43,7 @@ class _DeleteScreenState extends State<DeleteScreen> {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://127.0.0.1:8000/delete'),
+        Uri.parse('https://tracking-api-l4v2.onrender.com/delete'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': _emailController.text,
@@ -55,6 +55,11 @@ class _DeleteScreenState extends State<DeleteScreen> {
 
       if (response.statusCode == 200) {
         _showConfirmationDialog();
+      }
+      if(response.statusCode == 401){
+        setState(() {
+          _errorMessage = responseBody['detail'] ?? 'Credenciales incorrectas';
+        });
       } else {
         setState(() {
           _errorMessage = responseBody['detail'] ?? 'Error al eliminar la cuenta';
@@ -62,7 +67,7 @@ class _DeleteScreenState extends State<DeleteScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error de conexión: ${e.toString()}';
+  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       });
     } finally {
       if (mounted) {
@@ -99,52 +104,67 @@ class _DeleteScreenState extends State<DeleteScreen> {
     );
   }
 
-  Future<void> _performDeletion() async {
-    if (!mounted) return;
-    
-    setState(() {
-      _isLoading = true;
-    });
+Future<void> _performDeletion() async {
+  if (!mounted) return;
+  
+  setState(() {
+    _isLoading = true;
+    _errorMessage = '';
+  });
 
-    try {
-      final response = await http.delete(
-        Uri.parse('http://127.0.0.1:8000/delete'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': _emailController.text,
-          'password': _passwordController.text,
-        }),
-      );
+  try {
+    final response = await http.delete(
+      Uri.parse('https://127.0.0.1:8000 /delete'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      }),
+    );
 
-      if (response.statusCode == 200) {
+    final responseBody = json.decode(response.body);
+
+    print('Respuesta del servidor: ${response.statusCode}');
+    print('Cuerpo de la respuesta: $responseBody');
+
+    if (response.statusCode == 200) {
+      // Verificar el estado en el cuerpo de la respuesta
+      if (responseBody['status'] == 'success') {
         if (mounted) {
           _showSuccessDialog();
           Navigator.pushNamedAndRemoveUntil(
-              context, '/', (Route<dynamic> route) => false);
+            context, '/', (Route<dynamic> route) => false);
         }
       } else {
-        final responseBody = json.decode(response.body);
+        // Manejar éxito falso (status 200 pero error en el cuerpo)
         if (mounted) {
           setState(() {
-            _errorMessage = responseBody['detail'] ?? 'Error al eliminar la cuenta';
+            _errorMessage = responseBody['message'] ?? 
+                          'La solicitud fue recibida pero no se completó';
           });
         }
       }
-    } catch (e) {
+    } else {
+      // Manejar otros códigos de estado
       if (mounted) {
         setState(() {
-          _errorMessage = 'Error de conexión: ${e.toString()}';
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
+          _errorMessage = responseBody['message'] ?? 
+                        'Error al eliminar la cuenta (Código: ${response.statusCode})';
         });
       }
     }
+  } catch (e) {
+    if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    }
+  } finally {
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-
+}
   void _showSuccessDialog() {
     showDialog(
       context: context,

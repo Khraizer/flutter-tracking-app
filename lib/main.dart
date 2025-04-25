@@ -5,7 +5,9 @@ import 'screens/update_screen.dart';
 import 'screens/show_screen.dart';
 import 'screens/delete_screen.dart';
 import 'screens/datos_screen.dart';
-import 'screens/tracking_screen.dart'; // Importa la nueva pantalla
+import 'screens/tracking_screen.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/reset_password_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
         '/update': (context) => UpdateScreen(),
         '/delete': (context) => DeleteScreen(),
         '/datos': (context) => DatosScreen(),
+        '/forgot': (context) => ForgotPasswordScreen(),
+        // '/reset': (context) => ResetPasswordScreen(), // Eliminamos esta ruta estática
         '/tracking': (context) => TrackingScreen(
               userId: ModalRoute.of(context)!.settings.arguments as int,
             ),
@@ -37,6 +41,15 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => TrackingScreen(
               userId: settings.arguments as int,
+            ),
+          );
+        }
+        // Añadimos manejo para la ruta reset con parámetros
+        if (settings.name == '/reset') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => ResetPasswordScreen(
+              email: args['email'],
             ),
           );
         }

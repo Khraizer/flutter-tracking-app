@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/register'),
+        Uri.parse('https://tracking-api-l4v2.onrender.com/register'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': _emailController.text,

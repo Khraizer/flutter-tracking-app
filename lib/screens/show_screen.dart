@@ -42,7 +42,7 @@ class _ShowScreenState extends State<ShowScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://TU_SERVIDOR/show'),
+        Uri.parse('https://tracking-api-l4v2.onrender.com/show'),
         headers: {'Content-Type': 'application/json'},
       );
 

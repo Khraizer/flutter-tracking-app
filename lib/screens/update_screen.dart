@@ -75,7 +75,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
     try {
       final response = await http.put(
-        Uri.parse('http://127.0.0.1:8000/update'),
+        Uri.parse('https://tracking-api-l4v2.onrender.com/update'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: json.encode({
           'email': _emailController.text,
